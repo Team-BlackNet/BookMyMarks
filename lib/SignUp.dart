@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'SignIn.dart';
 import 'bookmark.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
   static String id = 'SignUp';
@@ -219,7 +220,18 @@ class _SignUpState extends State<SignUp> {
                               showSpinner = false;
                             });
                           } catch (e) {
-                            print(e);
+                            Fluttertoast.showToast(
+                                msg: "Invalid Username! Pls Try again",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 5,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                            setState(() {
+                              showSpinner = false;
+                            });
                           }
                           _firestore.collection('users').add({
                             'name': name,
