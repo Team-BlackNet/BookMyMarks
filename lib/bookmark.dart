@@ -26,15 +26,13 @@ class BookMark extends StatefulWidget {
 }
 
 class _BookMarkState extends State<BookMark> {
-  final control = TextEditingController();
-  final control1 = TextEditingController();
   final _firestore = Firestore.instance;
   FirebaseUser loggedInUser;
   final _auth = FirebaseAuth.instance;
   String uid;
   String url;
   String tags;
-
+ 
   @override
   void initState() {
     super.initState();
@@ -53,6 +51,7 @@ class _BookMarkState extends State<BookMark> {
     }
   }
 
+ 
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -93,7 +92,6 @@ class _BookMarkState extends State<BookMark> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                     child: Container(
-                      //color: Color(0xfff5f5f5),
                       child: TextFormField(
                         style: TextStyle(
                           color: Colors.black,
@@ -107,9 +105,8 @@ class _BookMarkState extends State<BookMark> {
                             labelStyle: TextStyle(
                                 fontSize: 15
                             )
-                        ),
-                        controller: control,
-                        onChanged: (value) {
+                        ),                       
+                        onChanged: (value){
                           url = value;
                         },
                       ),
@@ -133,8 +130,7 @@ class _BookMarkState extends State<BookMark> {
                                 fontSize: 15
                             )
                         ),
-                        controller: control1,
-                        onChanged: (value) {
+                        onChanged: (value){
                           tags = value;
                         },
                       ),
@@ -147,9 +143,8 @@ class _BookMarkState extends State<BookMark> {
                         padding: EdgeInsets.only(top: 20),
                         child: MaterialButton(
                           onPressed: () {
-                            control.clear();
-                            control1.clear();
-                            _firestore.collection('bookmark')
+                            if(url!=null && tags!=null){
+                              _firestore.collection('bookmark')
                                 .document(uid)
                                 .collection('urlandtags')
                                 .add({
@@ -165,6 +160,18 @@ class _BookMarkState extends State<BookMark> {
                                 textColor: Colors.white,
                                 fontSize: 16.0
                             );
+                            Navigator.pushNamed(context, BookMark.id);
+                            }else{
+                              Fluttertoast.showToast(
+                                msg: "Url/Tags is/are null!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 3,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                            }
                           },
                           child: Text('Add',
                             style: TextStyle(

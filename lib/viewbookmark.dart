@@ -52,6 +52,7 @@ class _ViewState extends State<View> {
 }
 
 class Stream extends StatelessWidget {
+  String url;
   final String uid;
   Stream({this.uid});
   @override
@@ -85,7 +86,17 @@ class Stream extends StatelessWidget {
                       color: Colors.red
                     ),
                   ),
-                    onTap: () => launch(list[index]['url']),
+                  onTap: (){
+                    url = list[index]['url'];
+                    if(url.substring(0,7)=='https://'){
+                      launch(url);
+                    }else{
+                      url = 'https://' + list[index]['url'];
+                      print(url);
+                      launch(url);
+                    }
+                  },
+                   // onTap: () => launch(list[index]['url']),
                     onLongPress: () =>  Firestore.instance.runTransaction((Transaction myTransaction) async {
                       await myTransaction.delete(snapshot.data.documents[index].reference);
                       })
