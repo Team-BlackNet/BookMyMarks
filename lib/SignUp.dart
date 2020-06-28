@@ -7,7 +7,6 @@ import 'bookmark.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
-  static String id = 'SignUp';
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -212,13 +211,15 @@ class _SignUpState extends State<SignUp> {
                             AuthResult result = await _auth.createUserWithEmailAndPassword(
                                 email: username, password: password);
                             if (result != null) {
-                              Navigator.pushNamed(context, SignIn.id);
+                              setState(() {
+                                showSpinner = false;
+                              });
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
                             }
                             await DatabaseService().updateUserData('0',
                                 '0');
-                            setState(() {
-                              showSpinner = false;
-                            });
+
                           } catch (e) {
                             Fluttertoast.showToast(
                                 msg: "Invalid Username! Pls Try again",

@@ -7,7 +7,6 @@ import 'SignUp.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignIn extends StatefulWidget {
-  static String id = 'SignIn';
   @override
   _SignInState createState() => _SignInState();
 }
@@ -148,7 +147,8 @@ class _SignInState extends State<SignIn> {
                         child: Center(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, SignUp.id);
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (BuildContext ctx) => SignUp()));
                             },
                             child:
                             Text("Don't Have an Account? Register Now",

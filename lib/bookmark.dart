@@ -21,7 +21,6 @@ class DatabaseService {
 }
 
 class BookMark extends StatefulWidget {
-  static String id = 'BookMark';
   @override
   _BookMarkState createState() => _BookMarkState();
 }
