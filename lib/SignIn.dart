@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'bookmark.dart';
 import 'SignUp.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -102,7 +103,10 @@ class _SignInState extends State<SignIn> {
                             final user = await _auth.signInWithEmailAndPassword(
                                 email: username, password: password);
                             if (user != null) {
-                              Navigator.pushNamed(context, BookMark.id);
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setString('email', username);
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (BuildContext ctx) => BookMark()));
                             }
                             setState(() {
                               showSpinner = false;
@@ -139,16 +143,6 @@ class _SignInState extends State<SignIn> {
                             borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(top: 20),
-                    //   child: Center(
-                    //     child: Text(
-                    //       'Forgot your password?',
-                    //       style: TextStyle(
-                    //           fontSize: 15, fontWeight: FontWeight.bold),
-                    //     ),
-                    //   ),
-                    // ),
                     Padding(
                         padding: EdgeInsets.only(top: 30),
                         child: Center(

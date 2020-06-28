@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url/SignIn.dart';
 import 'viewbookmark.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class DatabaseService {
   static String uid;
   final CollectionReference unitsCollection = Firestore.instance.collection(
@@ -54,6 +55,23 @@ class _BookMarkState extends State<BookMark> {
  
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
+        leading: null,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () async{
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove('email');
+                _auth.signOut();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
+               // Navigator.pushNamed(context, SignIn.id);
+              }),
+        ],
+        title: Text('BookMyMarks'),
+      ),
       body: Stack(
         children: <Widget>[
           Container(
@@ -70,7 +88,7 @@ class _BookMarkState extends State<BookMark> {
                 .of(context)
                 .size
                 .width,
-            margin: EdgeInsets.only(top: 270),
+            margin: EdgeInsets.only(top: 200),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,
@@ -115,7 +133,6 @@ class _BookMarkState extends State<BookMark> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                     child: Container(
-                      //color: Color(0xfff5f5f5),
                       child: TextFormField(
                         style: TextStyle(
                           color: Colors.black,
@@ -160,7 +177,8 @@ class _BookMarkState extends State<BookMark> {
                                 textColor: Colors.white,
                                 fontSize: 16.0
                             );
-                            Navigator.pushNamed(context, BookMark.id);
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (BuildContext ctx) => BookMark()));
                             }else{
                               Fluttertoast.showToast(
                                 msg: "Url/Tags is/are null!",
@@ -193,7 +211,8 @@ class _BookMarkState extends State<BookMark> {
                         padding: EdgeInsets.only(top: 20),
                         child: MaterialButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, View.id);
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (BuildContext ctx) => View()));
                           },
                           child: Text('View',
                             style: TextStyle(

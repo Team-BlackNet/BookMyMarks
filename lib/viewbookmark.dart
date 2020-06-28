@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url/bookmark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final _firestore = Firestore.instance;
@@ -9,6 +10,7 @@ FirebaseUser loggedInUser;
 
 class View extends StatefulWidget {
   static String id = 'View';
+
   @override
   _ViewState createState() => _ViewState();
 }
@@ -16,6 +18,7 @@ class View extends StatefulWidget {
 class _ViewState extends State<View> {
   final _auth = FirebaseAuth.instance;
   String uid;
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +31,7 @@ class _ViewState extends State<View> {
       if (user != null) {
         setState(() {
           loggedInUser = user;
-        uid=loggedInUser.uid;
+          uid = loggedInUser.uid;
         });
       }
     } catch (e) {
@@ -41,12 +44,14 @@ class _ViewState extends State<View> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
-        leading: null,
         title: Text('BookMarks'),
-      ),
-      body: SafeArea(
-        child: Stream(uid: uid)
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (BuildContext ctx) => BookMark())),
         ),
+      ),
+      body: SafeArea(child: Stream(uid: uid)),
     );
   }
 }
@@ -54,56 +59,57 @@ class _ViewState extends State<View> {
 class Stream extends StatelessWidget {
   String url;
   final String uid;
+
   Stream({this.uid});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('bookmark/$uid/urlandtags').snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.black,
-              ),
-            );
-          } 
-            final list = snapshot.data.documents;
-            return ListView.builder(
-              itemCount: list.length,
-                itemBuilder: (context1, index){
-                  return ListTile(
-                    title: Text(list[index]['url'],
+      stream: _firestore.collection('bookmark/$uid/urlandtags').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.black,
+            ),
+          );
+        }
+        final list = snapshot.data.documents;
+        return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context1, index) {
+              return ListTile(
+                  title: Text(
+                    list[index]['url'],
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      backgroundColor: Colors.black
-                     ),
-                    ),
-                    subtitle: Text(list[index]['tags'],
-                    style: TextStyle(
-                      fontSize:16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red
-                    ),
+                        fontSize: 18,
+                        color: Colors.white,
+                        backgroundColor: Colors.black),
                   ),
-                  onTap: (){
+                  subtitle: Text(
+                    list[index]['tags'],
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
+                  ),
+                  onTap: () {
                     url = list[index]['url'];
-                    if(url.substring(0,7)=='https://'){
+                    if (url.substring(0, 7) == 'https://') {
                       launch(url);
-                    }else{
+                    } else {
                       url = 'https://' + list[index]['url'];
                       print(url);
                       launch(url);
                     }
                   },
-                   // onTap: () => launch(list[index]['url']),
-                    onLongPress: () =>  Firestore.instance.runTransaction((Transaction myTransaction) async {
-                      await myTransaction.delete(snapshot.data.documents[index].reference);
-                      })
-                  );
-                }
-            );
-        },
-      );
+                  onLongPress: () => Firestore.instance
+                          .runTransaction((Transaction myTransaction) async {
+                        await myTransaction
+                            .delete(snapshot.data.documents[index].reference);
+                      }));
+            });
+      },
+    );
   }
 }
