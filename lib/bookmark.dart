@@ -58,16 +58,29 @@ class _BookMarkState extends State<BookMark> {
         backgroundColor: Colors.blueGrey,
         leading: null,
         actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () async{
-                SharedPreferences prefs = await SharedPreferences.getInstance();
+          GestureDetector(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                child: Text('Sign Out',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 0.67),),
+              ),
+            onTap: ()async{
+              SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('email');
                 _auth.signOut();
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
-               // Navigator.pushNamed(context, SignIn.id);
-              }),
+            },
+          )
+//          IconButton(
+//              icon: Icon(Icons.close),
+//              onPressed: () async{
+//                SharedPreferences prefs = await SharedPreferences.getInstance();
+//                prefs.remove('email');
+//                _auth.signOut();
+//                Navigator.pushReplacement(context,
+//                    MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
+//               // Navigator.pushNamed(context, SignIn.id);
+//              }),
         ],
         title: Text('BookMyMarks'),
       ),
@@ -159,7 +172,7 @@ class _BookMarkState extends State<BookMark> {
                         padding: EdgeInsets.only(top: 20),
                         child: MaterialButton(
                           onPressed: () {
-                            if(url!=null && tags!=null){
+                            if(url!=null){
                               _firestore.collection('bookmark')
                                 .document(uid)
                                 .collection('urlandtags')

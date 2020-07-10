@@ -50,9 +50,100 @@ class _ViewState extends State<View> {
           onPressed: () => Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (BuildContext ctx) => BookMark())),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: DataSearch());
+            },
+          )
+        ],
       ),
       body: SafeArea(child: Stream(uid: uid)),
     );
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  final tags = [
+    'Delhi',
+    'Mumbai',
+    'Banglore',
+    'Chandigarh',
+    'Shimla',
+    'Punjab',
+    'Goa',
+    'Pune',
+    'Agra',
+    'Bhatinda',
+  ];
+
+  final recenttags = [
+    'Delhi',
+    'Mumbai',
+    'Banglore',
+    'Chandigarh',
+  ];
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // actions fo app bar
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // leading icon on the left of the app bar
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // show some result based on the selection
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // show when someone searches for something
+    final suggestionList = query.isEmpty
+        ? recenttags
+        : tags.where((p) => p.startsWith(query)).toList();
+
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        leading: Icon(Icons.bookmark),
+        title: RichText(text: TextSpan(
+          text: suggestionList[index].substring(0,query.length),
+          style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+          children: [
+            TextSpan(
+              text: suggestionList[index].substring(query.length),
+              style: TextStyle(color: Colors.grey)
+            )
+          ]
+        ),),
+      ),
+      itemCount: suggestionList.length,
+    );
+    throw UnimplementedError();
   }
 }
 
@@ -95,6 +186,7 @@ class Stream extends StatelessWidget {
                   ),
                   onTap: () {
                     url = list[index]['url'];
+                    //url.split()
                     if (url.substring(0, 7) == 'https://') {
                       launch(url);
                     } else {
