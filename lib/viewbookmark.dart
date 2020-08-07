@@ -96,7 +96,7 @@ class DataSearch extends SearchDelegate<String> {
         },
       )
     ];
-    throw UnimplementedError();
+
   }
 
   @override
@@ -111,7 +111,6 @@ class DataSearch extends SearchDelegate<String> {
         close(context, null);
       },
     );
-    throw UnimplementedError();
   }
 
   @override
@@ -143,10 +142,10 @@ class DataSearch extends SearchDelegate<String> {
       ),
       itemCount: suggestionList.length,
     );
-    throw UnimplementedError();
   }
 }
 
+// ignore: must_be_immutable
 class Stream extends StatelessWidget {
   String url;
   final String uid;

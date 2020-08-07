@@ -5,20 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url/SignIn.dart';
 import 'viewbookmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-class DatabaseService {
-  static String uid;
-  final CollectionReference unitsCollection = Firestore.instance.collection(
-      'bookmark').document(uid).collection('urlandatgs');
 
-  Future updateUserData(String url,
-      String tags) async {
-    return await
-    unitsCollection.add({
-      'url': url,
-      'tags': tags,
-    });
-  }
-}
 
 class BookMark extends StatefulWidget {
   @override
@@ -71,16 +58,6 @@ class _BookMarkState extends State<BookMark> {
                     MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
             },
           )
-//          IconButton(
-//              icon: Icon(Icons.close),
-//              onPressed: () async{
-//                SharedPreferences prefs = await SharedPreferences.getInstance();
-//                prefs.remove('email');
-//                _auth.signOut();
-//                Navigator.pushReplacement(context,
-//                    MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
-//               // Navigator.pushNamed(context, SignIn.id);
-//              }),
         ],
         title: Text('BookMyMarks'),
       ),
@@ -179,6 +156,7 @@ class _BookMarkState extends State<BookMark> {
                                 .add({
                               'url': url,
                               'tags': tags,
+                              'searchKey': tags[0],
                             });
                             Fluttertoast.showToast(
                                 msg: "Successfully Added",

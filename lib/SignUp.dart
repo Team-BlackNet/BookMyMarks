@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'SignIn.dart';
-import 'bookmark.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
@@ -217,9 +216,6 @@ class _SignUpState extends State<SignUp> {
                               Navigator.pushReplacement(context,
                                   MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
                             }
-                            await DatabaseService().updateUserData('0',
-                                '0');
-
                           } catch (e) {
                             Fluttertoast.showToast(
                                 msg: "Invalid Username! Pls Try again",
